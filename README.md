@@ -1,5 +1,5 @@
 # AquaJS
-![logo](https://i.imgur.com/eCLKMU8.png"Орк")
+![logo](https://i.imgur.com/fldyMvG.png"Орк")
 ___________
 Библиотека для JavaScript
 
