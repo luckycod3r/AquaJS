@@ -1,0 +1,23 @@
+html{
+    height: 100%;
+    width: 100%;
+}
+body{
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+}
+.wrapper{
+    border: 1px solid #ccc;
+    height: 100%;
+    box-sizing: border-box;
+    padding: 1vh;
+    width: 50%;
+}
+.logger{
+    resize: none;
+    width: 50%;
+}
