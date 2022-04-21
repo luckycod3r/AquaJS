@@ -1,4 +1,3 @@
-# AquaJS
 ![logo](https://i.imgur.com/fldyMvG.png"Орк")
 ___________
 Библиотека для JavaScript
