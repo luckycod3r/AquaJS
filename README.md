@@ -11,7 +11,7 @@ ___________
 :white_check_mark: Сортировка массивов    
 :black_square_button: Система Drag & Drop    
 :white_check_mark: Работа с классами    
-:white_check_mark: Компилятор модулей в один файл 
+:white_check_mark: Компилятор модулей в один файл    
 :black_square_button: Модальные окна    
 :black_square_button: Диалоговые окна    
 
