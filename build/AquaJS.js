@@ -1,1 +1,167 @@
-function A_Arrays_sort(e,t="desc"){return"desc"==t.toLowerCase()?e.sort(function(e,t){return e-t}):"asc"==t.toLowerCase()?e.sort(function(e,t){return e+t}):void 0}function A_CSS_listen(e,t,n){"string"==typeof e&&(e=[e]);for(let r in e){let s,o=null;if(null==document.querySelector(e[r].toString().replace(" ",""))){if(o=e[r],null==e[r])return}else o=document.querySelector(e[r]);s=n.split(",");let l=[];for(let e in s)if("remove"==t)o.classList.remove(s[e]);else if("contains"==t){if(l.push(o.classList.contains(s[e])),1==n.length)return o.classList.contains(s);if(e==s.length-1)return l}else"add"==t&&o.classList.add(s[e])}}function A_aqua_rand(e,t,...n){let r=e-.5+Math.random()*(t-e+1);return Math.round(r)}function A_Requests_send(e,t,n,r){let s=new FormData;if("POST"==e.toString())for(let e in n)s.append(n,n[e]);var o=new XMLHttpRequest;o.open(e.toString(),t.toString,!0),o.onload=function(e){},o.send()}function A_(e,...t){if(null!=document.querySelector(e)){let t=document.querySelector(e);return t?{e:t,html:t.innerHTML,classes:t.classList}:null}if("random"==e){t[0],t[1];return A_aqua_rand(t[0],t[1],5)}return"sort"==e?A_Arrays_sort(t[0],t[1]):"class"==e?A_CSS_listen(t[0],t[1],t[2]):"response"==e?A_Requests_send(t[0],t[1],t[2]):void 0}
+let Config = {
+"js-links" : false,
+"customConsole" : true
+}
+function A_(type,...args){
+try {
+
+
+
+if(type == undefined){
+return {
+random : function(min,max) { return A_aqua_rand(min,max) },
+sort : function(array) {return A_Arrays_sort(array)},
+config : function() {
+return A_Manager_Config();
+},
+log : function(s){
+console.log(s);
+document.querySelector("[aqua-console='']").innerHTML += s.toString();
+},
+init : function(){
+
+return A_Manager_Config().load();
+
+}
+
+
+
+}
+}
+
+else if(type.classList != undefined || document.querySelector(type) != undefined){
+let result = (type.classList == undefined) ? document.querySelector(type) : type;
+return result ? {
+e : result,
+html : result.innerHTML,
+classes : result.classList,
+class : function(operation, value) {return A_CSS_listen(result.e,operation,value)}
+} : null
+}
+else if(type == "response"){
+return A_Requests_send(args[0],args[1],args[2])
+}
+} catch (error) {
+A_().log(error)
+}
+/*  let elem = type;
+return {
+class : function(s){
+let result = {}
+let list = elem.classList
+for(let classes in list){
+result.classes = list[classes];
+}
+return result
+}
+}*/
+}
+function A_Arrays_sort(array,type = "desc"){
+
+if(type.toLowerCase() == "desc"){
+return array.sort(function(a,b){
+return a-b;
+});
+}
+else if(type.toLowerCase() == "asc"){
+return array.sort(function(a,b){
+return a+b;
+});
+}
+}
+
+function A_Manager_Config(){
+
+return {
+
+enable : function(val){
+Config[val] = true;
+
+},
+disable : function(val){
+Config[val] = false;
+},
+load : function(){
+let modulesCount = 0;
+if(Config["js-links"] == true){
+document.querySelectorAll(`[jsl=""]`).forEach(function(i){
+i.setAttribute("href","javascript:void(0)");
+i.removeAttribute("jsl")
+})
+modulesCount++;
+
+}
+console.warn(`AquaJS: ${modulesCount} configs is loaded`);
+}
+
+
+
+
+}
+
+
+}
+function A_CSS_listen(elem,operation,value){
+console.log(elem + "_" + operation + "_" + value)
+if(typeof elem == "string"){
+elem = [elem];
+}
+for(let index in elem){
+let classs;
+let element = null;
+if(document.querySelector(elem[index].toString().replace(" ","")) == undefined){
+element = elem[index];
+if(elem[index] == undefined){
+return undefined;
+}
+}
+else{
+element = document.querySelector(elem[index]);
+}
+classs = value.split(",");
+let result = []
+for(let i in classs){
+if(element.classList != undefined){
+
+if(operation == "remove"){
+element.classList.remove(classs[i]);
+}
+else if(operation == "contains"){
+result.push(element.classList.contains(classs[i]));
+if(value.length == 1){
+return element.classList.contains(classs);
+}
+if(i == classs.length - 1) return(result);
+
+}
+else if(operation == "add"){
+element.classList.add(classs[i]);
+}
+}
+else{
+console.error("AquaJS: Element is not defined");
+}
+
+}
+}
+}
+function A_aqua_rand(min,max,...props){
+return Math.round(min - 0.5 + Math.random() * (max - min + 1));
+}
+function A_Requests_send(method,url,data,listener){
+let form_data = new FormData();
+if(method.toString() == "POST"){
+for(let value in data){
+form_data.append(data, data[value]);
+}
+
+}
+
+var xhttp = new XMLHttpRequest();
+xhttp.open(method.toString(), url.toString, true);
+xhttp.onload = function(event) {
+
+}
+
+xhttp.send();
+}
