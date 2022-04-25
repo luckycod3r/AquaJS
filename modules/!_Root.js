@@ -1,6 +1,4 @@
-let Config = {
-    "js-links" : false,
-}
+
 function A_(type,...args){
     try {
     
@@ -14,7 +12,7 @@ function A_(type,...args){
                 return A_Manager_Config();
             },
             log : function(s){
-                console.log(s);
+                console.warn(`AquaJS: ${s}`);
             },
             init : function(){
 
@@ -33,7 +31,19 @@ function A_(type,...args){
             e : result,
             html : result.innerHTML,
             classes : result.classList,
-            class : function(operation, value) {return A_CSS_listen(result.e,operation,value)}
+            class : function() { 
+                return {
+                    add : function(value){
+                        return A_CSS_listen(result,"add",value,"one",args[0])
+                    },
+                    remove : function(value){
+                        return A_CSS_listen(result,"remove",value,"one",args[0])
+                    },
+                    contains : function(value){
+                        return A_CSS_listen(result,"contains",value,"one",args[0])
+                    }
+                }
+            }
         } : null
     }
     else if(type == "response"){

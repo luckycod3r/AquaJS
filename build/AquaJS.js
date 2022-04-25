@@ -1,7 +1,4 @@
-let Config = {
-"js-links" : false,
-"customConsole" : true
-}
+
 function A_(type,...args){
 try {
 
@@ -15,8 +12,7 @@ config : function() {
 return A_Manager_Config();
 },
 log : function(s){
-console.log(s);
-document.querySelector("[aqua-console='']").innerHTML += s.toString();
+console.warn(`AquaJS: ${s}`);
 },
 init : function(){
 
@@ -35,7 +31,19 @@ return result ? {
 e : result,
 html : result.innerHTML,
 classes : result.classList,
-class : function(operation, value) {return A_CSS_listen(result.e,operation,value)}
+class : function() {
+return {
+add : function(value){
+return A_CSS_listen(result,"add",value,"one",args[0])
+},
+remove : function(value){
+return A_CSS_listen(result,"remove",value,"one",args[0])
+},
+contains : function(value){
+return A_CSS_listen(result,"contains",value,"one",args[0])
+}
+}
+}
 } : null
 }
 else if(type == "response"){
@@ -70,20 +78,30 @@ return a+b;
 }
 }
 
+let AquaJS_SimpleConfig_Applayed_Developed_by_luckycod3r = {
+"js-links" : true,
+"logger" : true
+};
 function A_Manager_Config(){
-
+conf = AquaJS_SimpleConfig_Applayed_Developed_by_luckycod3r;
 return {
 
 enable : function(val){
-Config[val] = true;
+AquaJS_SimpleConfig_Applayed_Developed_by_luckycod3r[val] = true;
 
 },
 disable : function(val){
-Config[val] = false;
+AquaJS_SimpleConfig_Applayed_Developed_by_luckycod3r[val] = false;
+},
+get : function(){
+return conf;
+},
+apply : function(cfg){
+AquaJS_SimpleConfig_Applayed_Developed_by_luckycod3r = cfg;
 },
 load : function(){
 let modulesCount = 0;
-if(Config["js-links"] == true){
+if( conf["js-links"]!=undefined&&conf["js-links"]== true){
 document.querySelectorAll(`[jsl=""]`).forEach(function(i){
 i.setAttribute("href","javascript:void(0)");
 i.removeAttribute("jsl")
@@ -91,8 +109,10 @@ i.removeAttribute("jsl")
 modulesCount++;
 
 }
+if(conf["logger"]!=undefined&&conf["logger"]== true){
 console.warn(`AquaJS: ${modulesCount} configs is loaded`);
 }
+}
 
 
 
@@ -101,8 +121,11 @@ console.warn(`AquaJS: ${modulesCount} configs is loaded`);
 
 
 }
-function A_CSS_listen(elem,operation,value){
-console.log(elem + "_" + operation + "_" + value)
+document.addEventListener("DOMContentLoaded",() => {
+A_Manager_Config().load();
+})
+function A_CSS_listen(elem,operation,value,type,...props){
+if(type  == "two"){
 if(typeof elem == "string"){
 elem = [elem];
 }
@@ -139,7 +162,49 @@ element.classList.add(classs[i]);
 }
 }
 else{
-console.error("AquaJS: Element is not defined");
+if(Config.logger){
+console.error(`AquaJS: Element (${element}) is not defined`);
+}
+
+}
+
+}
+}
+}
+else if(type == "one"){
+let result = [];
+classs = value.split(",");
+for(let i in classs){
+if(elem.classList != undefined){
+
+if(operation == "remove"){
+elem.classList.remove(classs[i]);
+}
+else if(operation == "contains"){
+
+result.push(elem.classList.contains(classs[i]));
+if(value.length == 1){
+
+return elem.classList.contains(classs);
+}
+if(i == classs.length - 1){
+if(props[0] != "ignore" && A_().config().get()["logger"]){
+A_().log(result)
+}
+return(result)
+}
+
+
+}
+else if(operation == "add"){
+elem.classList.add(classs[i]);
+}
+}
+else{
+if(Config.logger){
+console.error(`AquaJS: Element (${elem}) is not defined`);
+}
+
 }
 
 }
@@ -147,6 +212,22 @@ console.error("AquaJS: Element is not defined");
 }
 function A_aqua_rand(min,max,...props){
 return Math.round(min - 0.5 + Math.random() * (max - min + 1));
+}
+let Aqua_Compilied_Modal = [];
+
+
+function createModals(){
+
+}
+function initModule(){
+chrs = 'abdehkmnpswxzABDEFGHKMNPQRSTWXZ123456789';
+let className = '';
+for (var i = 0; i < 7; i++) {
+var pos = Math.floor(Math.random() * chrs.length);
+className += chrs.substring(pos,pos+1);
+}
+Utils.createClass(`.${className}-generic-aquaJS`,"background-color: red !important");
+Utils.applyClass(`${className}-generic-aquaJS`,A_(".wrapper").e)
 }
 function A_Requests_send(method,url,data,listener){
 let form_data = new FormData();
@@ -165,3 +246,26 @@ xhttp.onload = function(event) {
 
 xhttp.send();
 }
+let Utils = {
+createClass : function (name,rules){
+var style = document.createElement('style');
+style.type = 'text/css';
+document.getElementsByTagName('head')[0].appendChild(style);
+if(!(style.sheet||{}).insertRule)
+(style.styleSheet || style.sheet).addRule(name, rules);
+else
+style.sheet.insertRule(name+"{"+rules+"}",0);
+},
+applyClass :function (name,element,doRemove){
+if(typeof element.valueOf() == "string"){
+element = document.getElementById(element);
+}
+if(!element) return;
+if(doRemove){
+element.className = element.className.replace(new RegExp("\\b"+name+"\\b","g"),"");
+}else{
+element.className = element.className + " "+name;
+}
+}
+}
+
