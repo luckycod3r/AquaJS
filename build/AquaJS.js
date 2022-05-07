@@ -18,6 +18,13 @@ init : function(){
 
 return A_Manager_Config().load();
 
+},
+dialogs : function(){
+return {
+open : function(modal){A_Dialogs_open(modal)},
+yes : function(params,obj){A_Dialogs_Accept(params,obj)},
+no : function(params,obj){A_Dialogs_Decline(params,obj)},
+}
 }
 
 
@@ -28,7 +35,7 @@ return A_Manager_Config().load();
 else if(type.classList != undefined || document.querySelector(type) != undefined){
 let result = (type.classList == undefined) ? document.querySelector(type) : type;
 return result ? {
-e : result,
+"" : result,
 html : result.innerHTML,
 classes : result.classList,
 class : function() {
@@ -52,17 +59,6 @@ return A_Requests_send(args[0],args[1],args[2])
 } catch (error) {
 A_().log(error)
 }
-/*  let elem = type;
-return {
-class : function(s){
-let result = {}
-let list = elem.classList
-for(let classes in list){
-result.classes = list[classes];
-}
-return result
-}
-}*/
 }
 function A_Arrays_sort(array,type = "desc"){
 
@@ -80,7 +76,8 @@ return a+b;
 
 let AquaJS_SimpleConfig_Applayed_Developed_by_luckycod3r = {
 "js-links" : true,
-"logger" : true
+"logger" : true,
+"parseProtect" : true
 };
 function A_Manager_Config(){
 conf = AquaJS_SimpleConfig_Applayed_Developed_by_luckycod3r;
@@ -191,6 +188,7 @@ if(i == classs.length - 1){
 if(props[0] != "ignore" && A_().config().get()["logger"]){
 A_().log(result)
 }
+
 return(result)
 }
 
@@ -213,21 +211,55 @@ console.error(`AquaJS: Element (${elem}) is not defined`);
 function A_aqua_rand(min,max,...props){
 return Math.round(min - 0.5 + Math.random() * (max - min + 1));
 }
-let Aqua_Compilied_Modal = [];
-
-
 function createModals(){
 
 }
-function initModule(){
-chrs = 'abdehkmnpswxzABDEFGHKMNPQRSTWXZ123456789';
-let className = '';
-for (var i = 0; i < 7; i++) {
-var pos = Math.floor(Math.random() * chrs.length);
-className += chrs.substring(pos,pos+1);
+function A_generic_classes(e,rules){
+
 }
-Utils.createClass(`.${className}-generic-aquaJS`,"background-color: red !important");
-Utils.applyClass(`${className}-generic-aquaJS`,A_(".wrapper").e)
+
+function A_Dialogs_open(params){
+try {
+let dialogClassName = Utils.randomWord();
+let dialogActionClassName = Utils.randomWord();
+let dialogActionsContainer = Utils.randomWord();
+
+Utils.createClass(`.${dialogClassName}-generic-aquajs`,"position: fixed; z-index: 2; min-height: 30vh; top: 25vh; border-radius: 20px; flex-direction: column; width: 40vw; display: flex; align-items: center; background-color: #fff;");
+Utils.createClass(`.${dialogActionClassName}-generic-aquajs`,"display: inline-flex; justify-content: center; text-decoration: none; color: #000; align-items: center; width: 5vw; height: 4vh; text-align: center; background-color: #fff; box-shadow: 1px 1px 4px 1px rgba(0,0,0,0.1);");
+Utils.createClass(`.${dialogActionsContainer}-generic-aquajs`," margin-top: 3vh; display: flex; column-gap: 2vw;");
+document.body.innerHTML += `
+<div class="${dialogClassName}-generic-aquajs">
+<h1 class="${Utils.randomWord()}-generic-aquajs">${params.title}</h1>
+<p class="${Utils.randomWord()}-generic-aquajs">${params.message}</p>
+<div class="${dialogActionsContainer}-generic-aquajs">
+<a href="javascript:void(0)" class="${dialogActionClassName}-generic-aquajs" onClick="A_().dialogs().no(${params.onDecline},this)">Нет</a><a href="javascript:void(0)" class="${dialogActionClassName}-generic-aquajs" onClick="A_().dialogs().yes(${params.onYes},this)">Да</a>
+</div>
+</div>`
+} catch (error) {
+document.querySelectorAll(`style`).forEach(function(i){
+i.remove()
+})
+A_Dialogs_open(params)
+
+}
+
+
+}
+
+function A_Dialogs_Accept(param,btn){
+btn.parentElement.parentElement.remove();
+document.querySelectorAll(`style`).forEach(function(i){
+i.remove()
+})
+setTimeout(param,0);
+}
+
+function A_Dialogs_Decline(param,btn){
+btn.parentElement.parentElement.remove();
+document.querySelectorAll(`style`).forEach(function(i){
+i.remove()
+})
+setTimeout(param,0);
 }
 function A_Requests_send(method,url,data,listener){
 let form_data = new FormData();
@@ -266,6 +298,15 @@ element.className = element.className.replace(new RegExp("\\b"+name+"\\b","g"),"
 }else{
 element.className = element.className + " "+name;
 }
+},
+randomWord : function(){
+chrs = 'abdehkmnpswxzABDEFGHKMNPQRSTWXZ123456789';
+let className = '';
+for (var i = 0; i < 7; i++) {
+var pos = Math.floor(Math.random() * chrs.length);
+className += chrs.substring(pos,pos+1);
+}
+return className;
 }
 }
 
